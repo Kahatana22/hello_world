@@ -50,7 +50,7 @@ public class MyHashMap<K, V> {
         this(DEFAULT_CAPACITY);
     }
 
-    public void put(K key, V value) {
+    public V put(K key, V value) {
         int backetKey;
         int h = 0;
         if (key == null) {
@@ -58,7 +58,6 @@ public class MyHashMap<K, V> {
                 if (table[i].key == null) {
                     table[i].value = value;
                 }
-                return;
             }
         } else {
             h = key.hashCode();
@@ -73,7 +72,6 @@ public class MyHashMap<K, V> {
             while (true) {
                 if (n.hash == h && n.key.equals(key)) {
                     n.value = value;
-                    return;
                 }
                 if (n.next == null) {
                     n.next = new Node<>(h, key, value, null);
@@ -82,9 +80,10 @@ public class MyHashMap<K, V> {
                 }
             }
         }
+        return (V) table;
     }
 
-    public void remove(Object key) {
+    public V remove(K key) {
         int backetKey;
         int h = 0;
         Node previosNode = null;
@@ -97,7 +96,6 @@ public class MyHashMap<K, V> {
                     } else {
                         table[0] = node.next;
                     }
-                    return;
                 } else {
                     previosNode = node;
                 }
@@ -110,7 +108,6 @@ public class MyHashMap<K, V> {
         backetKey = h & (table.length - 1);
         Node node = table[backetKey];
         if (node == null) {
-            return;
         } else {
             while (true) {
                 if (node.hash == h && node.key.equals(key)) {
@@ -119,16 +116,15 @@ public class MyHashMap<K, V> {
                     } else {
                         table[backetKey] = node.next;
                     }
-                    return;
                 }
                 if (node.next == null) {
-                    return;
                 } else {
                     previosNode = node;
                     node = node.next;
                 }
             }
         }
+        return (V) table;
     }
 
     public int size() {
@@ -142,20 +138,20 @@ public class MyHashMap<K, V> {
         return size;
     }
 
-    public Object get(Object key) {
+    public V get(K key) {
         Object element = new Object();
         for (Node node : table) {
             Node n = node;
             while (n != null) {
                 if (n.key == key) {
                     element = n.value;
-                    return element;
+                    return (V) element;
                 } else {
                     return null;
                 }
             }
         }
-        return element;
+        return (V) element;
     }
 
     public void clear() {
