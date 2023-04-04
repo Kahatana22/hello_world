@@ -2,7 +2,7 @@ package main.java.modul9.Collections;
 
 import java.util.Arrays;
 
-public class MyStack<E> {
+public class MyStack<T> {
     private int size;
     private Object[] array;
     private int top;
@@ -13,14 +13,14 @@ public class MyStack<E> {
         top = -1;
     }
 
-    public void push(Object element) {
+    public void push(T element) {
         int i = ++top;
         array[i] = element;
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         if (array == null || index < 0 || index >= size) {
-            return array;
+            return (T) array;
         }
         Object[] result = new Object[size - 1];
         System.arraycopy(array, 0, result, 0, index);
@@ -28,7 +28,7 @@ public class MyStack<E> {
         System.out.println("result = " + Arrays.toString(result));
         size--;
         array = result;
-        return array;
+        return (T) array;
     }
 
     public void clear() {
@@ -40,20 +40,20 @@ public class MyStack<E> {
         return size;
     }
 
-    public Object peek() {
+    public T peek() {
         if (top == -1) {
-            return 0;
+            return null;
         } else {
-            return array[top];
+            return (T) array[top];
         }
     }
 
-    public Object pop() {
+    public T pop() {
         if (top == -1) {
-            return 0;
+            return null;
         } else {
             size--;
-            return array[top--];
+            return (T) array[top--];
         }
     }
     public void print() {
