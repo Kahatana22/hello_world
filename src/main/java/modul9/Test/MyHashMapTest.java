@@ -13,9 +13,14 @@ public class MyHashMapTest {
         wondersOfTheWorld.put("Christ the Redeemer Statue", "Rio de Janeiro");
         wondersOfTheWorld.put("Chichen Itza", "Yucatan");
         System.out.println("wondersOfTheWorld = " + wondersOfTheWorld);
-        System.out.println(wondersOfTheWorld.get("Petra"));
+        System.out.println(wondersOfTheWorld.get("Chichen Itza"));
         System.out.println(wondersOfTheWorld.size());
         wondersOfTheWorld.remove("Great Wall of China");
+        wondersOfTheWorld.remove("Christ the Redeemer Statue");
+        wondersOfTheWorld.remove("Chichen Itza");
+        wondersOfTheWorld.remove("Colosseum");
+        System.out.println("wondersOfTheWorld = " + wondersOfTheWorld);
+        System.out.println("wondersOfTheWorld.size() = " + wondersOfTheWorld.size());
         wondersOfTheWorld.clear();
     }
 }
