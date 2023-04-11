@@ -1,44 +1,24 @@
 package main.java.modul9.Collections;
 
-import java.util.Objects;
 import java.util.StringJoiner;
 
 public class MyHashMap<K, V> {
 
-    static class Node<K, V> {
-        int hash;
+    private static class Node<K, V> {
         K key;
         V value;
         Node<K, V> next;
 
-        public Node(int hash, K key, V value, Node<K,V> next) {
-            this.hash = hash;
+        public Node( K key, V value) {
             this.key = key;
             this.value = value;
-            this.next = next;
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-        public final int hashCode() {
-            return Objects.hashCode(key);
-        }
-
-        public final V setValue(V newValue) {
-            V oldValue = value;
-            value = newValue;
-            return oldValue;
         }
     }
 
     private Node<K, V>[] table;
     private static final int DEFAULT_CAPACITY = 16;
+    private int size;
+
     public MyHashMap(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException();
@@ -50,112 +30,73 @@ public class MyHashMap<K, V> {
         this(DEFAULT_CAPACITY);
     }
 
-    public V put(K key, V value) {
-        int backetKey;
-        int h = 0;
-        if (key == null) {
-            for (int i = 0; i < table.length; i++) {
-                if (table[i].key == null) {
-                    table[i].value = value;
-                }
-            }
-        } else {
-            h = key.hashCode();
-            h = h ^ (h >>> 16);
-        }
-        backetKey = h & (table.length - 1);
-        Node node = table[backetKey];
+    private int hash(K key) {
+        return hashCode() % table.length;
+    }
+
+    public void put(K key, V value) {
+        int element = hash(key);
+        Node<K, V> node = table[element];
+        Node<K, V> newNode = new Node<>(key, value);
+
         if (node == null) {
-            table[backetKey] = new Node<>(h, key, value, null);
+            table[element] = newNode;
         } else {
-            Node n = node;
-            while (true) {
-                if (n.hash == h && n.key.equals(key)) {
-                    n.value = value;
+            Node<K, V> prev = node;
+            while (node != null) {
+                if (key == null || node.key.equals(key)) {
+                    node.value = value;
                 }
-                if (n.next == null) {
-                    n.next = new Node<>(h, key, value, null);
-                } else {
-                    n = n.next;
-                }
+                prev = node;
+                node = node.next;
             }
+            prev.next = newNode;
         }
-        return (V) table;
+        size++;
     }
 
     public V remove(K key) {
-        int backetKey;
-        int h = 0;
-        Node previosNode = null;
-        if (key == null) {
-            Node node = table[0];
-            while (node != null) {
-                if (node.key == null) {
-                    if (previosNode != null) {
-                        previosNode.next = node.next;
-                    } else {
-                        table[0] = node.next;
-                    }
-                } else {
-                    previosNode = node;
+        int element = hash(key);
+        Node<K, V> node = table[element];
+
+        if (node != null) {
+            if (key == null || node.key.equals(key)) {
+                table[element] = node.next;
+                size--;
+                return node.value;
+            }
+            while (node.next != null) {
+                if (node.next.key.equals(key)) {
+                    node.next = node.next.next;
+                    size--;
+                    return node.value;
                 }
                 node = node.next;
             }
-        } else {
-            h = key.hashCode();
-            h = h ^ (h >>> 16);
         }
-        backetKey = h & (table.length - 1);
-        Node node = table[backetKey];
-        if (node == null) {
-        } else {
-            while (true) {
-                if (node.hash == h && node.key.equals(key)) {
-                    if (previosNode != null) {
-                        previosNode.next = node.next;
-                    } else {
-                        table[backetKey] = node.next;
-                    }
-                }
-                if (node.next == null) {
-                } else {
-                    previosNode = node;
-                    node = node.next;
-                }
-            }
-        }
-        return (V) table;
+        return null;
+    }
+
+    public void clear() {
+        size = 0;
+        table = new Node[DEFAULT_CAPACITY];
     }
 
     public int size() {
-        int size = 0;
-        for (Node node : table) {
-            Node n = node;
-            while (n != null) {
-                size++;
-            }
-        }
         return size;
     }
 
     public V get(K key) {
-        Object element = new Object();
-        for (Node node : table) {
-            Node n = node;
-            while (n != null) {
-                if (n.key == key) {
-                    element = n.value;
-                    return (V) element;
-                } else {
-                    return null;
-                }
-            }
-        }
-        return (V) element;
-    }
+        int element = hash(key);
+        Node<K, V> node = table[element];
 
-    public void clear() {
-        table = new Node[DEFAULT_CAPACITY];
+        while (node != null) {
+            if (key == null || node.key.equals(key)) {
+                return node.value;
+            }
+            node = node.next;
+        }
+        return null;
     }
 
     @Override
