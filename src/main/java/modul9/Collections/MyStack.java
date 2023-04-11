@@ -1,7 +1,5 @@
 package main.java.modul9.Collections;
 
-import java.util.Arrays;
-
 public class MyStack<T> {
     private int size;
     private Object[] array;
@@ -25,7 +23,6 @@ public class MyStack<T> {
         Object[] result = new Object[size - 1];
         System.arraycopy(array, 0, result, 0, index);
         System.arraycopy(array, index + 1, result, index, size - index -1);
-        System.out.println("result = " + Arrays.toString(result));
         size--;
         array = result;
         return (T) array;
